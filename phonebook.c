@@ -4,14 +4,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define NAME_SIZE 31
+#define PHONE_SIZE 15
+#define TOTAL_CONTACTS 5
+
 struct contact{
-	char fname[31];
-	char lname[31];
-	char telep[15];
-	char cellp[15];
+	char fname[NAME_SIZE];
+	char lname[NAME_SIZE];
+	char telep[PHONE_SIZE];
+	char cellp[PHONE_SIZE];
 };
 
-#define TOTAL_CONTACTS 5
+
+
+
 struct contact A[TOTAL_CONTACTS];
 
 void clrscr(void);
@@ -32,6 +38,7 @@ void sortl(void);
 void sortp(void);
 void sortc(void);
 void help(void);
+void get_input(char * a, size_t b);
 int last;
 
 int main()
@@ -92,13 +99,9 @@ int main()
 void insert(void)
 {
 	char ans='y';
-	char *string = NULL;
-	size_t len=0;
-	size_t len_size=0;
 	clrscr();
     printf("\nPhone Book12<::>Insert Contacts");
     printf("\n--------------------------------------------------------------------------------");
-	string = (char *)malloc(31);
 	
 	while(ans=='y'){
 		if(last == TOTAL_CONTACTS)
@@ -106,22 +109,18 @@ void insert(void)
 		else{
 			printf("\n\nData of Contact %2.2d{\n",last+1);
 			printf("\n\t  1-F.Name: ");
-			len_size = getline(&string,&len,stdin);
-			strcpy(A[last].fname, string);
-			
+            		get_input(A[last].fname, NAME_SIZE);
+
 			printf("\t  2-L.Name: ");
-			len_size = getline(&string,&len,stdin);
-			strcpy(A[last].lname, string);
-			
-			printf("\t  3-Tele.P: ");
-			len_size = getline(&string,&len,stdin);
-			strcpy(A[last].telep, string);
+            		get_input(A[last].lname, NAME_SIZE);
+
+           		printf("\t  3-Tele.P: ");
+			get_input(A[last].telep, PHONE_SIZE);
 			
 			printf("\t  4-Cell.P: ");
-			len_size = getline(&string,&len,stdin);
-			strcpy(A[last].cellp, string);
+			get_input(A[last].cellp, PHONE_SIZE);
 
-	    
+
 			printf("\n|-->Data Recorded!}");
 			printf("\n\t\t\tNext Contact?(y/n) Answer:");
 		    ans = getc(stdin);
@@ -135,10 +134,8 @@ void insert(void)
 
 void delet(void)
 {
-	char dfname_string[5],dlname_string[5];
-	char *input = NULL;
-	size_t len=0;
-	size_t len_size=0;
+	char dfname_string[NAME_SIZE];
+	char dlname_string[NAME_SIZE];
 	register int i,j,find=0;
 	char ch;
 	clrscr();
@@ -146,12 +143,10 @@ void delet(void)
     printf("\n--------------------------------------------------------------------------------");
 	printf ("\n::Enter data of the contact that you want delete it,please:");
 	printf("\n\n  ::Enter first name: ");
-	len_size = getline(&input,&len,stdin);
-	strcpy(dfname_string,input);
+        get_input(dfname_string, NAME_SIZE);
 
 	printf("\n  ::Enter last name: ");
-	len_size = getline(&input,&len,stdin);
-	strcpy(dlname_string,input);
+	get_input(dlname_string, NAME_SIZE);
 	
 	for (i = 0; i < last; i++) {
 	 if (strcmp (dfname_string, A[i].fname) == 0 && strcmp (dlname_string, A[i].lname) == 0 ) {
@@ -168,24 +163,23 @@ void delet(void)
 
 	   	last--;
 	   	find = 1;
-  	 	break;
+            break;
 		}
 	 }
 	}
 	if (find==0)
 		printf("\t\t\n<<This contact does not exist in this list or program can not delete it.>>");
 	else
-		printf("\t\t\n<<Target contact was successfully deleted from list!>>");
+        printf("\t\t\n<<Target contact was successfully deleted from list!>>");
+
 	printf("\n\n\nPress a key to return main page & continue program|-->");
 	getc(stdin);
 }
 
 void edit()
 {
-	char input[31];
-	char *dfname = NULL ,*dlname= NULL;
-	size_t len=0;
-	size_t len_size=0;
+	char dfname[NAME_SIZE];
+	char dlname[NAME_SIZE];
 	register int i,j,find=0;
 	char ch;
 	clrscr();	
@@ -194,9 +188,10 @@ void edit()
 	printf ("\n::Enter data of the contact that you want edit it,please:");
 	
 	printf("\n\n  ::Enter first name: ");
-	len_size = getline(&dfname,&len,stdin);
+	get_input(dfname, NAME_SIZE);
+
 	printf("\n  ::Enter last name: ");
-	len_size = getline(&dlname,&len,stdin);
+	get_input(dlname, NAME_SIZE);
 
 	for (i=0; i < last; i++) {
 	 if (strcmp (dfname, A[i].fname) == 0 && strcmp (dlname, A[i].lname) == 0 ) {
@@ -209,20 +204,15 @@ void edit()
 		if(ch=='y'){
 			printf("\n::Enter NEW data for this contact...");
 			printf("\n >|Enter new first name: ");	
-		
-			scanf("%s",input);
-			strcpy(A[i].fname,input);
+			get_input(A[i].fname, NAME_SIZE);
 			printf(" >|Enter new last name: ");
-			scanf("%s",input);
-			strcpy(A[i].lname,input);
+			get_input(A[i].lname, NAME_SIZE);
 			
 			printf(" >|Enter new telephone number: ");
-			scanf("%s",input);
-			strcpy(A[i].telep,input);
+			get_input(A[i].telep, PHONE_SIZE);
 
 			printf(" >|Enter new cellphone number: ");
-			scanf("%s",input);
-			strcpy(A[i].cellp,input);
+			get_input(A[i].cellp, PHONE_SIZE);
 			
 		   	find=1;
 		    break;
@@ -274,12 +264,10 @@ void search(void)
 
 void searchf(void)
 {
-	char *fname = NULL;
+	char fname[NAME_SIZE];
 	register int i,find=0;
-	size_t len=0;
-	size_t len_size=0;
 	printf("Enter a first name to search:");
-	len_size = getline(&fname,&len,stdin);
+	get_input(fname, NAME_SIZE);
     for(i = 0;i < last; i++)
 		if(strcmp(fname,A[i].fname) == 0) {
 			find=1;
@@ -299,12 +287,10 @@ void searchf(void)
 
 void searchl(void)
 {
-	char *lname = NULL;
+	char lname[NAME_SIZE];
 	register int i,find=0;
-	size_t len=0;
-	size_t len_size=0;
 	printf("\n::Enter a last name to search:");
-	len_size = getline(&lname,&len,stdin);
+	get_input(lname, NAME_SIZE);
     for(i = 0;i < last; i++)
 		if(strcmp(lname,A[i].lname) == 0) {
 			find=1;
@@ -325,14 +311,10 @@ void searchl(void)
 void searchp(void)
 {
 	
-	char *phone = NULL;
+	char telep[PHONE_SIZE];
 	int i,find=0;
-	char telep[5];
-	size_t len=0;
-	size_t len_size=0;
 	printf("\n::Enter a phone number to search:");
-	len_size = getline(&phone,&len,stdin);
-	strcpy(telep, phone);
+	get_input(telep, PHONE_SIZE);
 	for(i = 0;i < last; i++)
 		if(strcmp(telep,A[i].telep) == 0) {
 			find=1;
@@ -352,15 +334,10 @@ void searchp(void)
 
 void searchc(void)
 {
-	
-	char *phone = NULL;
-	char cell[5];
+	char cell[PHONE_SIZE];
 	int i,find=0;
-	size_t len=0;
-	size_t len_size=0;
 	printf("\n::Enter a cellphone number to search:");
-	len_size = getline(&phone,&len,stdin);
-	strcpy(cell, phone);
+	get_input(cell, PHONE_SIZE);
 	
     for(i = 0; i < last; i++)
 		if(strcmp(cell,A[i].cellp) == 0) {
@@ -500,7 +477,7 @@ void list()
 	gotoxy(60,4);
 	printf("Cellphone");
 	printf("\n--------------------------------------------------------------------------------");
-	for(i = 0; i <= last; i++) {
+	for(i = 0; i < last; i++) {
 		gotoxy(1,i+6);						 
 		printf("%3.3d",i+1);
 		gotoxy(9,i+6);
@@ -577,3 +554,21 @@ void help(void)
 	 printf("%c[%d;%df", 0x1B, y, x);
  }
 
+void get_input(char * destination, size_t maxSize)
+{
+    size_t lenSize = 0;
+    char *input = NULL;
+    size_t len = 0;
+    lenSize = getline(&input, &len, stdin);
+    if(lenSize < maxSize)
+    {
+        input[lenSize-1] = '\0';
+        strncpy(destination, input, lenSize);
+    }
+    else
+    {
+        input[maxSize-1] = '\0';
+        strncpy(destination, input, maxSize);
+    }
+    free(input);
+}
